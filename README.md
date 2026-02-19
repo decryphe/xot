@@ -73,3 +73,8 @@ Xot underneath uses the
 [indextree](https://docs.rs/indextree/latest/indextree/) crate. Xot completely
 wraps the indextree functionality but the various operations it allows are
 taken from indextree.
+
+## Development
+
+To check the repository before opening a PR, run `just ci` or simply `just` in
+the repository root.
