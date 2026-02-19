@@ -258,7 +258,7 @@ impl Xot {
     ///
     /// # Ok::<(), xot::Error>(())
     /// ```
-    pub fn name_ref(&self, name_id: NameId, context: Node) -> Result<xmlname::RefName, Error> {
+    pub fn name_ref(&self, name_id: NameId, context: Node) -> Result<xmlname::RefName<'_>, Error> {
         xmlname::RefName::from_node(self, context, name_id)
     }
 
@@ -472,7 +472,7 @@ impl Xot {
     ///
     /// # Ok::<(), xot::Error>(())
     /// ```
-    pub fn node_name_ref(&self, node: Node) -> Result<Option<xmlname::RefName>, Error> {
+    pub fn node_name_ref(&self, node: Node) -> Result<Option<xmlname::RefName<'_>>, Error> {
         if let Some(name) = self.node_name(node) {
             Ok(Some(self.name_ref(name, node)?))
         } else {
@@ -899,7 +899,7 @@ mod tests {
         let a = xot.first_child(doc_el).unwrap();
         let b = xot.first_child(a).unwrap();
 
-        let foo = xot.prefix("foo").unwrap();
+        let foo_p = xot.prefix("foo").unwrap();
         let ns = xot.namespace("http://example.com").unwrap();
         let ns_foo = xot.namespace("http://example.com/foo").unwrap();
         let ns_bar = xot.namespace("http://example.com/bar").unwrap();
@@ -907,18 +907,18 @@ mod tests {
 
         assert_eq!(
             xot.prefixes_in_scope(doc_el),
-            Prefixes::from_iter(vec![(foo, ns), (xot.xml_prefix(), xot.xml_namespace())])
+            Prefixes::from_iter(vec![(foo_p, ns), (xot.xml_prefix(), xot.xml_namespace())])
         );
 
         assert_eq!(
             xot.prefixes_in_scope(a),
-            Prefixes::from_iter(vec![(foo, ns), (xot.xml_prefix(), xot.xml_namespace())])
+            Prefixes::from_iter(vec![(foo_p, ns), (xot.xml_prefix(), xot.xml_namespace())])
         );
 
         assert_eq!(
             xot.prefixes_in_scope(b),
             Prefixes::from_iter(vec![
-                (foo, ns_foo),
+                (foo_p, ns_foo),
                 (bar, ns_bar),
                 (xot.xml_prefix(), xot.xml_namespace())
             ])
